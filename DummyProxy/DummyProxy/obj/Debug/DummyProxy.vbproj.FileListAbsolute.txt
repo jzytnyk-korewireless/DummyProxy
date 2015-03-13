@@ -1,1 +1,0 @@
-d:\work\git\dummyProxy\DummyProxy\DummyProxy\bin\Debug\DummyProxy.exe.config
