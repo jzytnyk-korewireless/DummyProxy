@@ -20,6 +20,7 @@ namespace dummyProxy
             {
                 var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
+                //this socket is bound to port 55555 and (i think) will only find packets sent to that port
                 socket.Bind(new IPEndPoint(IPAddress.Loopback, listenPort));
          
                 var thr = new Thread(Main2);
@@ -35,6 +36,7 @@ namespace dummyProxy
                     
                 Console.WriteLine("main: Received from: {0}:{1} data: {2}",ip,port,Encoding.Default.GetString(buffer.Data));
 
+                //we are using socket defined above, this causes it to go out from port 55555
                 socket.SendTo(buffer.Data, remoteEndPoint);
 
                 Console.WriteLine("main: sent the bytes back");
@@ -53,6 +55,7 @@ namespace dummyProxy
             var socket2 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             var buffer = new UdpPacketBuffer();
             Console.WriteLine("thread: sending msg..");
+            //we do not bind this socket to a port, so it picks one at random
             socket2.SendTo(Encoding.Default.GetBytes("weird message"),
                 new IPEndPoint(IPAddress.Loopback, 55555));
 
@@ -61,6 +64,7 @@ namespace dummyProxy
 
                 Console.WriteLine("thread: waiting for packet");
 
+                //will listen on that (random) port for a response
                 socket2.ReceiveFrom(buffer.Data, ref buffer.RemoteEndPoint);
 
                 var remoteEndPoint = ((IPEndPoint)buffer.RemoteEndPoint);
