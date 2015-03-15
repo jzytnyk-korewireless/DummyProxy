@@ -10,8 +10,7 @@ namespace dummyProxy
     {
         static void Main()
         {
-           // Console.WriteLine("Port to listen?");
-            const int listenPort = 55555; //Console.ReadLine();
+            const int listenPort = 55555; 
             var buffer = new UdpPacketBuffer();
 
             // Create a UDP socket to listen for incoming authentication requests.
@@ -37,10 +36,14 @@ namespace dummyProxy
                 Console.WriteLine("main: Received from: {0}:{1} data: {2}",ip,port,Encoding.Default.GetString(buffer.Data));
 
                 //we are using socket defined above, this causes it to go out from port 55555
+                //(i think) this is how omegaRadius will work
+                //with 1 port defined for accounting and 1 for authentication
+                //if we send to KORE with the same socket, it (should) go out on the same port it is listening on
+                //(if) kore returns the message to the same port then it would work.
+                
                 socket.SendTo(buffer.Data, remoteEndPoint);
 
                 Console.WriteLine("main: sent the bytes back");
-
 
             }
             catch (Exception ex)
